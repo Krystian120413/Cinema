@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class Cinema {
 
@@ -43,6 +44,18 @@ public class Cinema {
         imageLabel.add(basePanel);
 
         contentPane.add(imageLabel, BorderLayout.CENTER);
+
+
+        seanceButton.addActionListener(e -> {
+            Seances seances = new Seances();
+            try {
+                seances.seancesListMain();
+                frame.setVisible(false);
+            } catch (SQLException | ClassNotFoundException throwables) {
+                JOptionPane.showMessageDialog(null, "Błąd połączenia");
+                //throwables.printStackTrace();
+            }
+        });
 
 
         loginButton.addActionListener(e -> {

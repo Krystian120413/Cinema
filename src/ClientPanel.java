@@ -46,7 +46,7 @@ public class ClientPanel {
         userLabel.setForeground(Color.WHITE);
 
         JButton ticketButton = new JButton("Kup bilet");
-        JButton buyedTicketButton = new JButton("Zakupione bilety");
+        JButton buyedTicketButton = new JButton("Twoje bilety");
         JButton seanceButton = new JButton("Seanse");
 
         topPanel.add(userLabel);
@@ -61,6 +61,19 @@ public class ClientPanel {
         imageLabel.add(basePanel);
 
         contentPane.add(imageLabel, BorderLayout.CENTER);
+
+
+
+        seanceButton.addActionListener(e -> {
+            Seances seances = new Seances();
+            try {
+                seances.seancesListClient();
+                frame.setVisible(false);
+            } catch (SQLException | ClassNotFoundException throwables) {
+                JOptionPane.showMessageDialog(null, "Błąd połączenia");
+            }
+
+        });
 
 
         frame.setContentPane(contentPane);

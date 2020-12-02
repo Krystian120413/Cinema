@@ -15,7 +15,7 @@ public class DBAcess {
 
         String query = "select haslo from KLIENT where email = '" + email + "'";
         result = stmt.executeQuery(query);
-        String pass = "";
+        String pass = null;
         meta = result.getMetaData();
 
         while (result.next()) {
@@ -23,11 +23,10 @@ public class DBAcess {
                 pass = result.getString(i + 1);
             }
         }
-
         con.close();
-
         return password.equals(pass);
     }
+
 
     public String client(String email) throws ClassNotFoundException, SQLException {
         String url = "jdbc:sqlite:baza_kino.db3";
@@ -35,21 +34,44 @@ public class DBAcess {
         Connection con = DriverManager.getConnection(url);
         this.stmt = con.createStatement();
 
-
-
         String query = "select imie, nazwisko from KLIENT where email = '" + email + "'";
         result = stmt.executeQuery(query);
-        String user = "";
+        StringBuilder user = new StringBuilder();
         meta = result.getMetaData();
 
         while (result.next()) {
             for (int i = 0; i < meta.getColumnCount(); i++) {
-                user += result.getString(i + 1) + " ";
+                user.append(result.getString(i + 1)).append(" ");
             }
         }
-
         con.close();
+        return user.toString();
+    }
 
-        return user;
+
+    public String[][] getSeances() throws ClassNotFoundException, SQLException {
+        String url = "jdbc:sqlite:baza_kino.db3";
+        Class.forName("org.sqlite.JDBC");
+        Connection con = DriverManager.getConnection(url);
+        this.stmt = con.createStatement();
+
+        result = stmt.executeQuery("select FIlM.tytul, FILM.rezyser, FILM.gatunek, FILM.czas_trwania, SEANS.dzien, SEANS.godzina_rozpoczecia, SEANS.id_sali, SALA.liczba_miejsc " +
+                "from FILM " +
+                "inner join SEANS " +
+                "on FILM.id_filmu=SEANS.id_filmu " +
+                "inner join SALA " +
+                "on SEANS.id_sali=SALA.id_sali ");
+        meta = result.getMetaData();
+        String[][] data = new String[100][meta.getColumnCount()];
+        int j = 0;
+        while (result.next()) {
+            for (int i = 0; i < meta.getColumnCount(); i++) {
+                data[j][i] = result.getString(i+1);
+            }
+            j++;
+            System.out.println();
+        }
+        con.close();
+        return data;
     }
 }

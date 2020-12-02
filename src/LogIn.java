@@ -32,10 +32,10 @@ public class LogIn {
         topPanel.setLayout(new GridLayout(2, 2, 5, 5));
         JLabel userLabel = new JLabel("Email: ", JLabel.CENTER);
         userLabel.setForeground(Color.WHITE);
-        JTextField userField = new JTextField(10);
+        JTextField userField = new JTextField(12);
         JLabel passLabel = new JLabel("Hasło: ", JLabel.CENTER);
         passLabel.setForeground(Color.WHITE);
-        JPasswordField passField = new JPasswordField(10);
+        JPasswordField passField = new JPasswordField(12);
 
         topPanel.add(userLabel);
         topPanel.add(userField);
@@ -77,7 +77,7 @@ public class LogIn {
                 }
                 frame.setVisible(false);
             }
-            else JOptionPane.showMessageDialog(null, "Błędny login");
+            else JOptionPane.showMessageDialog(null, "Błędne dane logowania");
         });
 
 
