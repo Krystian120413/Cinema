@@ -69,7 +69,6 @@ public class DBAcess {
                 data[j][i] = result.getString(i+1);
             }
             j++;
-            System.out.println();
         }
         con.close();
         return data;

@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class ClientPanel {
-    private String email;
+    private final String email;
     private ImageIcon imageForLabel;
 
     public ClientPanel(Object email){
