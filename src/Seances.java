@@ -28,7 +28,7 @@ public class Seances {
         loginButton.addActionListener(e -> {
             LogIn login = new LogIn();
             login.displayGUI();
-            frame.setVisible(false);
+            frame.dispose();
         });
 
         frame.add(panel);
@@ -52,6 +52,7 @@ public class Seances {
         final JScrollPane[] scrollPane = {new JScrollPane(table[0])};
         JButton buyTicketButton = new JButton("Kup bilet");
         JButton ticketsButton = new JButton("Twoje bilety");
+        JButton logOutButton = new JButton("Wyloguj");
         JFrame frame = new JFrame("Baza Seanse");
         JPanel panel = new JPanel();
 
@@ -59,9 +60,14 @@ public class Seances {
 
         panel.add(buyTicketButton);
         panel.add(ticketsButton);
+        panel.add(logOutButton);
         panel.add(scrollPane[0]);
 
-
+        logOutButton.addActionListener(e -> {
+            LogOut logout = new LogOut();
+            logout.display();
+            frame.dispose();
+        });
 
         frame.add(panel);
         frame.setMinimumSize(new Dimension(1100, 500));

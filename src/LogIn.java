@@ -75,7 +75,7 @@ public class LogIn {
                 } catch (SQLException | ClassNotFoundException throwables) {
                     JOptionPane.showMessageDialog(null, "Błąd połączenia");
                 }
-                frame.setVisible(false);
+                frame.dispose();
             }
             else JOptionPane.showMessageDialog(null, "Błędne dane logowania");
         });

@@ -5,11 +5,10 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class Cinema {
-
+public class LogOut {
     private ImageIcon imageForLabel;
 
-    private void display(){
+    public void display(){
 
         JFrame frame = new JFrame("KINO");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -28,14 +27,16 @@ public class Cinema {
         JPanel topPanel = new JPanel();
         topPanel.setOpaque(false);
         topPanel.setLayout(new GridLayout(2, 2, 5, 5));
-
         JPanel bottomPanel = new JPanel();
         bottomPanel.setOpaque(false);
-        JButton seanceButton = new JButton("Seanse");
-        JButton loginButton = new JButton("Zaloguj");
 
-        bottomPanel.add(seanceButton);
-        bottomPanel.add(loginButton);
+        JLabel logOutLabel = new JLabel("Pomyślnie wylogowano ", JLabel.CENTER);
+        logOutLabel.setForeground(Color.WHITE);
+
+        JButton closeButton = new JButton("Zamknij");
+
+        topPanel.add(logOutLabel);
+        bottomPanel.add(closeButton);
 
         basePanel.add(topPanel, BorderLayout.CENTER);
         basePanel.add(bottomPanel, BorderLayout.PAGE_END);
@@ -46,31 +47,11 @@ public class Cinema {
         contentPane.add(imageLabel, BorderLayout.CENTER);
 
 
-        seanceButton.addActionListener(e -> {
-            Seances seances = new Seances();
-            try {
-                seances.seancesListMain();
-                frame.dispose();
-            } catch (SQLException | ClassNotFoundException throwables) {
-                JOptionPane.showMessageDialog(null, "Błąd połączenia");
-                //throwables.printStackTrace();
-            }
-        });
-
-
-        loginButton.addActionListener(e -> {
-            LogIn login = new LogIn();
-            login.displayGUI();
-            frame.dispose();
-        });
+        closeButton.addActionListener(e -> frame.dispose());
 
         frame.setContentPane(contentPane);
         frame.pack();
         frame.setLocationByPlatform(true);
         frame.setVisible(true);
-    }
-
-    public static void main(String[] args){
-        SwingUtilities.invokeLater(() -> new Cinema().display());
     }
 }

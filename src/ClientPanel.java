@@ -48,11 +48,13 @@ public class ClientPanel {
         JButton ticketButton = new JButton("Kup bilet");
         JButton buyedTicketButton = new JButton("Twoje bilety");
         JButton seanceButton = new JButton("Seanse");
+        JButton logOutButton = new JButton("Wyloguj");
 
         topPanel.add(userLabel);
         bottomPanel.add(ticketButton);
         bottomPanel.add(buyedTicketButton);
         bottomPanel.add(seanceButton);
+        bottomPanel.add(logOutButton);
 
         basePanel.add(topPanel, BorderLayout.CENTER);
         basePanel.add(bottomPanel, BorderLayout.PAGE_END);
@@ -68,11 +70,16 @@ public class ClientPanel {
             Seances seances = new Seances();
             try {
                 seances.seancesListClient();
-                frame.setVisible(false);
+                frame.dispose();
             } catch (SQLException | ClassNotFoundException throwables) {
                 JOptionPane.showMessageDialog(null, "Błąd połączenia");
             }
+        });
 
+        logOutButton.addActionListener(e -> {
+            LogOut logout = new LogOut();
+            logout.display();
+            frame.dispose();
         });
 
 
