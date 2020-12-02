@@ -3,14 +3,23 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
-public class Cinema {
-
+public class ClientPanel {
+    private String email;
     private ImageIcon imageForLabel;
 
-    private void display(){
+    public ClientPanel(Object email){
+        this.email = (String) email;
+    }
 
-        JFrame frame = new JFrame("KINO");
+
+
+    public void display() throws SQLException, ClassNotFoundException {
+
+        DBAcess con = new DBAcess();
+
+        JFrame frame = new JFrame("Panel Klienta");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel contentPane = new JPanel();
@@ -30,11 +39,20 @@ public class Cinema {
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setOpaque(false);
-        JButton seanceButton = new JButton("Seanse");
-        JButton loginButton = new JButton("Zaloguj");
 
+        String user = con.client(email);
+
+        JLabel userLabel = new JLabel(("Witaj " + user), JLabel.CENTER);
+        userLabel.setForeground(Color.WHITE);
+
+        JButton ticketButton = new JButton("Kup bilet");
+        JButton buyedTicketButton = new JButton("Zakupione bilety");
+        JButton seanceButton = new JButton("Seanse");
+
+        topPanel.add(userLabel);
+        bottomPanel.add(ticketButton);
+        bottomPanel.add(buyedTicketButton);
         bottomPanel.add(seanceButton);
-        bottomPanel.add(loginButton);
 
         basePanel.add(topPanel, BorderLayout.CENTER);
         basePanel.add(bottomPanel, BorderLayout.PAGE_END);
@@ -45,19 +63,9 @@ public class Cinema {
         contentPane.add(imageLabel, BorderLayout.CENTER);
 
 
-        loginButton.addActionListener(e -> {
-            LogIn login = new LogIn();
-            login.displayGUI();
-            frame.setVisible(false);
-        });
-
         frame.setContentPane(contentPane);
         frame.pack();
         frame.setLocationByPlatform(true);
         frame.setVisible(true);
-    }
-
-    public static void main(String[] args){
-        SwingUtilities.invokeLater(() -> new Cinema().display());
     }
 }
