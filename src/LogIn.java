@@ -47,6 +47,7 @@ public class LogIn {
         JButton loginButton = new JButton("ZALOGUJ");
         loginButton.setHorizontalTextPosition(AbstractButton.CENTER);
         loginButton.setVerticalTextPosition(AbstractButton.BOTTOM);
+        loginButton.setFocusable(false);
         bottomPanel.add(loginButton);
 
         basePanel.add(topPanel, BorderLayout.CENTER);
@@ -59,8 +60,8 @@ public class LogIn {
 
 
         loginButton.addActionListener(e -> {
-                Object checkUser = userField.getText();
-                Object checkPassword = String.valueOf(passField.getPassword());
+                String checkUser = userField.getText();
+                String checkPassword = String.valueOf(passField.getPassword());
                 boolean check = false;
             try {
                 check = con.login(checkUser, checkPassword);
@@ -72,10 +73,11 @@ public class LogIn {
                 ClientPanel clientPanel = new ClientPanel(checkUser);
                 try {
                     clientPanel.display();
+                    frame.dispose();
                 } catch (SQLException | ClassNotFoundException throwables) {
                     JOptionPane.showMessageDialog(null, "Błąd połączenia");
                 }
-                frame.dispose();
+
             }
             else JOptionPane.showMessageDialog(null, "Błędne dane logowania");
         });

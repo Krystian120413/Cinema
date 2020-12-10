@@ -15,7 +15,7 @@ public class LogOut {
         JPanel contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout(5, 5));
         try {
-            imageForLabel = new ImageIcon(ImageIO.read(new File("img/tickets.jpg")));
+            imageForLabel = new ImageIcon(ImageIO.read(new File("img/cinema.jpg")));
         } catch(IOException mue) {
             JOptionPane.showMessageDialog(null, "Błąd połączenia");
         }
@@ -31,8 +31,11 @@ public class LogOut {
 
         JLabel logOutLabel = new JLabel("Pomyślnie wylogowano ", JLabel.CENTER);
         logOutLabel.setForeground(Color.WHITE);
+        logOutLabel.setFont(new Font(logOutLabel.getFont().getFontName(), Font.PLAIN, 20));
 
         JButton closeButton = new JButton("Zamknij");
+
+        closeButton.setFocusable(false);
 
         topPanel.add(logOutLabel);
         bottomPanel.add(closeButton);

@@ -9,8 +9,8 @@ public class ClientPanel {
     private final String email;
     private ImageIcon imageForLabel;
 
-    public ClientPanel(Object email){
-        this.email = (String) email;
+    public ClientPanel(String email){
+        this.email = email;
     }
 
 
@@ -45,14 +45,16 @@ public class ClientPanel {
         JLabel userLabel = new JLabel(("Witaj " + user), JLabel.CENTER);
         userLabel.setForeground(Color.WHITE);
 
-        JButton ticketButton = new JButton("Kup bilet");
-        JButton buyedTicketButton = new JButton("Twoje bilety");
+        JButton boughtTicketButton = new JButton("Twoje bilety");
         JButton seanceButton = new JButton("Seanse");
         JButton logOutButton = new JButton("Wyloguj");
 
+        boughtTicketButton.setFocusable(false);
+        seanceButton.setFocusable(false);
+        logOutButton.setFocusable(false);
+
         topPanel.add(userLabel);
-        bottomPanel.add(ticketButton);
-        bottomPanel.add(buyedTicketButton);
+        bottomPanel.add(boughtTicketButton);
         bottomPanel.add(seanceButton);
         bottomPanel.add(logOutButton);
 
@@ -65,11 +67,21 @@ public class ClientPanel {
         contentPane.add(imageLabel, BorderLayout.CENTER);
 
 
+        boughtTicketButton.addActionListener(e -> {
+            ShowTickets showTickets = new ShowTickets();
+            try {
+                showTickets.ticketsList(email);
+                frame.dispose();
+            } catch (SQLException | ClassNotFoundException throwables) {
+                throwables.printStackTrace();
+            }
+
+        });
 
         seanceButton.addActionListener(e -> {
             Seances seances = new Seances();
             try {
-                seances.seancesListClient();
+                seances.seancesListClient(email);
                 frame.dispose();
             } catch (SQLException | ClassNotFoundException throwables) {
                 JOptionPane.showMessageDialog(null, "Błąd połączenia");

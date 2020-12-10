@@ -34,6 +34,9 @@ public class Cinema {
         JButton seanceButton = new JButton("Seanse");
         JButton loginButton = new JButton("Zaloguj");
 
+        seanceButton.setFocusable(false);
+        loginButton.setFocusable(false);
+
         bottomPanel.add(seanceButton);
         bottomPanel.add(loginButton);
 
