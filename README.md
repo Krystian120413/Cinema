@@ -1,3 +1,3 @@
-Cinema project based on Java and database
+Cinema project based on Java wing and database jdbc
 
 IntelliJ and SQLiteStudio
