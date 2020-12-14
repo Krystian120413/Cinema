@@ -31,8 +31,10 @@ public class Cinema {
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setOpaque(false);
-        JButton seanceButton = new JButton("Seanse");
-        JButton loginButton = new JButton("Zaloguj");
+        JButton seanceButton = new JButton(new ImageIcon("img/buttons/firstSeancesButton.png"));
+        JButton loginButton = new JButton(new ImageIcon("img/buttons/firstLoginButton.png"));
+        seanceButton.setContentAreaFilled(false);
+        loginButton.setContentAreaFilled(false);
 
         seanceButton.setFocusable(false);
         loginButton.setFocusable(false);
@@ -54,7 +56,7 @@ public class Cinema {
             try {
                 seances.seancesListMain();
                 frame.dispose();
-            } catch (SQLException | ClassNotFoundException throwables) {
+            } catch (SQLException | ClassNotFoundException | IOException throwables) {
                 JOptionPane.showMessageDialog(null, "Błąd połączenia");
                 //throwables.printStackTrace();
             }

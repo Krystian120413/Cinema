@@ -32,9 +32,11 @@ public class LogIn {
         topPanel.setLayout(new GridLayout(2, 2, 5, 5));
         JLabel userLabel = new JLabel("Email: ", JLabel.CENTER);
         userLabel.setForeground(Color.WHITE);
+        userLabel.setFont(new Font("Arial", Font.BOLD, 16));
         JTextField userField = new JTextField(12);
         JLabel passLabel = new JLabel("Hasło: ", JLabel.CENTER);
         passLabel.setForeground(Color.WHITE);
+        passLabel.setFont(new Font("Arial", Font.BOLD, 16));
         JPasswordField passField = new JPasswordField(12);
 
         topPanel.add(userLabel);
@@ -44,10 +46,18 @@ public class LogIn {
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setOpaque(false);
-        JButton loginButton = new JButton("ZALOGUJ");
+        JButton loginButton = new JButton(new ImageIcon("img/buttons/loginButton.png"));
         loginButton.setHorizontalTextPosition(AbstractButton.CENTER);
         loginButton.setVerticalTextPosition(AbstractButton.BOTTOM);
         loginButton.setFocusable(false);
+        loginButton.setContentAreaFilled(false);
+        JButton registerButton = new JButton(new ImageIcon("img/buttons/registerButton.png"));
+        registerButton.setHorizontalTextPosition(AbstractButton.CENTER);
+        registerButton.setVerticalTextPosition(AbstractButton.BOTTOM);
+        registerButton.setFocusable(false);
+        registerButton.setContentAreaFilled(false);
+
+        bottomPanel.add(registerButton);
         bottomPanel.add(loginButton);
 
         basePanel.add(topPanel, BorderLayout.CENTER);
@@ -82,6 +92,47 @@ public class LogIn {
             else JOptionPane.showMessageDialog(null, "Błędne dane logowania");
         });
 
+        registerButton.addActionListener(e -> {
+            JLabel nameLabel = new JLabel("Imię: ");
+            JTextField nameField = new JTextField(12);
+            JLabel surnameLabel = new JLabel("Nazwisko: ");
+            JTextField surnameField = new JTextField(12);
+            JLabel emailLabel = new JLabel("Adres email");
+            JTextField emailField = new JTextField(12);
+            JLabel passwordLabel = new JLabel("Hasło: ");
+            JPasswordField passwordField = new JPasswordField(12);
+            JLabel repeatedPasswordLabel = new JLabel("Powtórz hasło: ");
+            JPasswordField repeatedPasswordField = new JPasswordField(12);
+
+
+            JPanel queryWindow = new JPanel(new GridLayout(0, 1));
+            queryWindow.add(nameLabel);
+            queryWindow.add(nameField);
+            queryWindow.add(surnameLabel);
+            queryWindow.add(surnameField);
+            queryWindow.add(emailLabel);
+            queryWindow.add(emailField);
+            queryWindow.add(passwordLabel);
+            queryWindow.add(passwordField);
+            queryWindow.add(repeatedPasswordLabel);
+            queryWindow.add(repeatedPasswordField);
+
+            int result = JOptionPane.showConfirmDialog(null, queryWindow, ("Zakładanie konta"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            if (result == JOptionPane.OK_OPTION) {
+                if (String.valueOf(passwordField.getPassword()).equals(String.valueOf(repeatedPasswordField.getPassword()))){
+                    try {
+                        con.addUser(nameField.getText(), surnameField.getText(), emailField.getText(), String.valueOf(passwordField.getPassword()));
+                    } catch (ClassNotFoundException | SQLException classNotFoundException) {
+                        //classNotFoundException.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Błąd połączenia");
+                    }
+                    JOptionPane.showMessageDialog(null, "Założono konto. Możesz się teraz zalogować");
+                }
+                else JOptionPane.showMessageDialog(null, "Hasła nie są identyczne");
+            } else {
+                System.out.println("Cancelled");
+            }
+        });
 
         frame.setContentPane(contentPane);
         frame.pack();

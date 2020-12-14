@@ -31,9 +31,10 @@ public class LogOut {
 
         JLabel logOutLabel = new JLabel("Pomyślnie wylogowano ", JLabel.CENTER);
         logOutLabel.setForeground(Color.WHITE);
-        logOutLabel.setFont(new Font(logOutLabel.getFont().getFontName(), Font.PLAIN, 20));
+        logOutLabel.setFont(new Font(logOutLabel.getFont().getFontName(), Font.PLAIN, 28));
 
-        JButton closeButton = new JButton("Zamknij");
+        JButton closeButton = new JButton(new ImageIcon("img/buttons/closeButton.png"));
+        closeButton.setContentAreaFilled(false);
 
         closeButton.setFocusable(false);
 

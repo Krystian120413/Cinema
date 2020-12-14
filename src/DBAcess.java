@@ -1,5 +1,4 @@
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -50,6 +49,58 @@ public class DBAcess {
         return user.toString();
     }
 
+    public String[] getClientData(String email) throws ClassNotFoundException, SQLException {
+        String url = "jdbc:sqlite:baza_kino.db3";
+        Class.forName("org.sqlite.JDBC");
+        Connection con = DriverManager.getConnection(url);
+        this.stmt = con.createStatement();
+
+        String query = "select imie, nazwisko, email, haslo from KLIENT where email = '" + email + "'";
+        result = stmt.executeQuery(query);
+        String [] user = new String[4];
+        meta = result.getMetaData();
+
+        while (result.next()) {
+            for (int i = 0; i < meta.getColumnCount(); i++) {
+                user[i] = result.getString(i + 1);
+            }
+        }
+        con.close();
+        return user;
+    }
+
+    public void updateUserData(String name, String surname, String email) throws ClassNotFoundException, SQLException {
+        String url = "jdbc:sqlite:baza_kino.db3";
+        Class.forName("org.sqlite.JDBC");
+        Connection con = DriverManager.getConnection(url);
+        this.stmt = con.createStatement();
+
+        String query = "update KLIENT  set imie = '" + name + "', nazwisko = '" + surname + "' where email = '"  + email + "'";
+        stmt.executeUpdate(query);
+        con.close();
+    }
+
+    public void addUser(String name, String surname, String email, String password) throws ClassNotFoundException, SQLException {
+        String url = "jdbc:sqlite:baza_kino.db3";
+        Class.forName("org.sqlite.JDBC");
+        Connection con = DriverManager.getConnection(url);
+        this.stmt = con.createStatement();
+
+        String query = "insert into KLIENT  values ('" + email + "', '" + password + "', '" + name + "', '" + surname + "')";
+        stmt.executeUpdate(query);
+        con.close();
+    }
+
+    public void deleteUser(String email, String password) throws ClassNotFoundException, SQLException {
+        String url = "jdbc:sqlite:baza_kino.db3";
+        Class.forName("org.sqlite.JDBC");
+        Connection con = DriverManager.getConnection(url);
+        this.stmt = con.createStatement();
+
+        String query = "delete from KLIENT where email = '" + email + "' and haslo = '" + password + "' ";
+        stmt.executeUpdate(query);
+        con.close();
+    }
 
     public String[][] getSeances() throws ClassNotFoundException, SQLException {
         String url = "jdbc:sqlite:baza_kino.db3";
@@ -64,7 +115,7 @@ public class DBAcess {
                 "inner join SALA " +
                 "on SEANS.id_sali=SALA.id_sali ");
         meta = result.getMetaData();
-        String[][] data = new String[40][meta.getColumnCount()];
+        String[][] data = new String[20][meta.getColumnCount()];
         int j = 0;
         while (result.next()) {
             for (int i = 0; i < meta.getColumnCount(); i++) {
@@ -82,8 +133,6 @@ public class DBAcess {
         Connection con = DriverManager.getConnection(url);
         this.stmt = con.createStatement();
 
-
-
         result = stmt.executeQuery("select FIlM.tytul, FILM.rezyser, FILM.gatunek, FILM.czas_trwania, SEANS.dzien, SEANS.godzina_rozpoczecia, SEANS.id_sali, BILET.miejsce, BILET.id_biletu " +
                 "from FILM " +
                 "inner join SEANS " +
@@ -95,10 +144,11 @@ public class DBAcess {
                 "where ZAMOWIENIA.email_klienta = '" + userMail + "'");
 
         meta = result.getMetaData();
+        System.out.println(userMail);
 
         LocalDate currentTime = LocalDate.now();
         java.util.Date nowDate = java.util.Date.from(currentTime.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        String[][] data = new String[100][meta.getColumnCount()+1];
+        String[][] data = new String[30][meta.getColumnCount()+1];
         int j = 0, i;
         while (result.next()) {
             i = 0;
@@ -106,16 +156,18 @@ public class DBAcess {
                 data[j][i] = result.getString(i+1);
                 i++;
             }
-            data[j][i] = (Date.valueOf(result.getDate("dzien").toLocalDate()).after(nowDate)) ? "aktywny" : "nieaktywny";
-            System.out.println(nowDate);
-            System.out.println(Date.valueOf(result.getDate("dzien").toLocalDate()));
+            //LocalDate date = LocalDate.parse(String.valueOf(data[j][i]));
+            //data[j][i] = (Date.valueOf(date).after(nowDate)) ? "aktywny" : "nieaktywny";
+            System.out.println("data[j][i]" + (data[j][i]));
+            System.out.println("nowDate: " + nowDate);
+            System.out.println("Date.valueOf(result.getDate(\"dzien\").toLocalDate()): " + Date.valueOf(result.getDate("dzien").toLocalDate()));
             j++;
         }
         con.close();
         return data;
     }
 
-    public String[] getSeats() throws ClassNotFoundException, SQLException {
+    public String[] getSeats(int seats) throws ClassNotFoundException, SQLException {
         String url = "jdbc:sqlite:baza_kino.db3";
         Class.forName("org.sqlite.JDBC");
         Connection con = DriverManager.getConnection(url);
@@ -126,9 +178,8 @@ public class DBAcess {
                 "inner join ZAMOWIENIA on BILET.id_zamowienia=ZAMOWIENIA.id_zamowienia " +
                 "inner join SEANS on ZAMOWIENIA.id_seansu=SEANS.id_seansu " +
                 "inner join SALA on SEANS.id_sali=SALA.id_sali " +
-                "where SEANS.id_seansu = 2");
+                "where SEANS.id_seansu = " + seats);
         meta = result.getMetaData();
-        String[][] data = new String[40][meta.getColumnCount()];
         ArrayList<String> seatTable = new ArrayList<>();
         for (int w = 0; w < Integer.parseInt(result.getString("liczba_miejsc")); w++)
             seatTable.add(w, String.valueOf(w+1));
@@ -148,33 +199,35 @@ public class DBAcess {
         return seatsRes;
     }
 
+    private int orderId;
+    private int ticketId;
+
     public void newOrder(String userMail, int seanceID, int selectedSeat) throws ClassNotFoundException, SQLException {
         String url = "jdbc:sqlite:baza_kino.db3";
         Class.forName("org.sqlite.JDBC");
         Connection con = DriverManager.getConnection(url);
         this.stmt = con.createStatement();
-
-        result = stmt.executeQuery("select ZAMOWIENIA.id_zamowienia " +
-                "from ZAMOWIENIA");
+        this.orderId++;
+        this.ticketId++;
+        result = stmt.executeQuery("select ZAMOWIENIA.id_zamowienia from ZAMOWIENIA");
         meta = result.getMetaData();
-        int orderId = 0;
         while (result.next()) {
             for (int i = 0; i < meta.getColumnCount(); i++) {
-                if(Integer.parseInt(result.getString("id_zamowienia")) > orderId)
-                    orderId = Integer.parseInt(result.getString("id_zamowienia")) + 1;
+                if(Integer.parseInt(result.getString("id_zamowienia")) > this.orderId)
+                    this.orderId = Integer.parseInt(result.getString("id_zamowienia")) + 1;
             }
         }
 
-        result = stmt.executeQuery("select BILET.id_biletu " +
-                "from BILET");
+        result = stmt.executeQuery("select BILET.id_biletu from BILET");
         meta = result.getMetaData();
-        int ticketId = 0;
         while (result.next()) {
             for (int i = 0; i < meta.getColumnCount(); i++) {
-                if(Integer.parseInt(result.getString("id_biletu")) > ticketId)
-                    ticketId = Integer.parseInt(result.getString("id_biletu")) + 1;
+                if(Integer.parseInt(result.getString("id_biletu")) > this.ticketId)
+                    this.ticketId = Integer.parseInt(result.getString("id_biletu")) + 1;
             }
         }
+
+        System.out.println("id zamowienia: " + orderId + " id biletu: " + ticketId);
 
         stmt.executeUpdate("insert into ZAMOWIENIA " +
                 "values (" + orderId + ", '" + userMail + "', " + seanceID + ")");

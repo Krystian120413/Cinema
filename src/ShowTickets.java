@@ -1,9 +1,14 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 
 public class ShowTickets {
+    private ImageIcon imageForLabel;
     public void ticketsList(String userMail) throws SQLException, ClassNotFoundException {
+
         DBAcess con = new DBAcess();
         String[][] data = con.getClientTickets(userMail);
         String[] columnNames = {"Film", "Reżyser", "Gatunek", "Czas trwania", "dzień", "godzina rozpoczęcia", "numer sali", "miejsce", "aktywny"};
@@ -16,16 +21,38 @@ public class ShowTickets {
         table[0].setPreferredScrollableViewportSize(new Dimension(table[0].getPreferredSize().width, 600));
 
         final JScrollPane[] scrollPane = {new JScrollPane(table[0])};
-        JButton backButton = new JButton("Powrót");
+        scrollPane[0].getVerticalScrollBar().setPreferredSize(new Dimension(20, Integer.MAX_VALUE));
+
+        JButton backButton = new JButton(new ImageIcon("img/buttons/backButton.png"));
+        backButton.setContentAreaFilled(false);
         JFrame frame = new JFrame("Twoje bilety");
         JPanel panel = new JPanel();
 
-        scrollPane[0].getVerticalScrollBar().setPreferredSize(new Dimension(20, Integer.MAX_VALUE));
+        JPanel contentPane = new JPanel();
+        contentPane.setLayout(new BorderLayout(5, 5));
+        try {
+            imageForLabel = new ImageIcon(ImageIO.read(new File("img/filmB.jpg")));
+        } catch(IOException mue) {
+            JOptionPane.showMessageDialog(null, "Błąd połączenia");
+        }
+        JLabel imageLabel = new JLabel(imageForLabel);
+        JPanel basePanel = new JPanel();
+        basePanel.setOpaque(false);
+        basePanel.setLayout(new BorderLayout(5, 5));
+        JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
+        topPanel.setLayout(new GridLayout(2, 2, 5, 5));
+        JPanel bottomPanel = new JPanel();
 
-        backButton.setFocusable(false);
+        bottomPanel.setOpaque(false);
+        topPanel.add(backButton);
+        bottomPanel.add(scrollPane[0]);
+        basePanel.add(topPanel, BorderLayout.CENTER);
+        imageLabel.setLayout(new GridBagLayout());
+        imageLabel.add(basePanel);
+        contentPane.add(imageLabel, BorderLayout.CENTER);
+        contentPane.add(bottomPanel, BorderLayout.PAGE_END);
 
-        panel.add(backButton);
-        panel.add(scrollPane[0]);
 
         backButton.addActionListener(e -> {
             ClientPanel clientPanel = new ClientPanel(userMail);
@@ -36,9 +63,11 @@ public class ShowTickets {
                 //throwables.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Błąd połączenia");
             }
-
         });
 
+        frame.setContentPane(contentPane);
+        frame.pack();
+        frame.setLocationByPlatform(true);
         frame.add(panel);
         frame.setMinimumSize(new Dimension(1250, 500));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
