@@ -18,15 +18,17 @@ public class ShowTickets {
         for (int i = 0; i < table[0].getColumnCount(); i++)
             table[0].getColumnModel().getColumn(i).setPreferredWidth(130);
 
-        table[0].setPreferredScrollableViewportSize(new Dimension(table[0].getPreferredSize().width, 600));
+        table[0].setPreferredScrollableViewportSize(new Dimension(table[0].getPreferredSize().width, 300));
 
         final JScrollPane[] scrollPane = {new JScrollPane(table[0])};
         scrollPane[0].getVerticalScrollBar().setPreferredSize(new Dimension(20, Integer.MAX_VALUE));
 
         JButton backButton = new JButton(new ImageIcon("img/buttons/backButton.png"));
         backButton.setContentAreaFilled(false);
+        backButton.setFocusable(false);
         JFrame frame = new JFrame("Twoje bilety");
         JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout(5, 5));
 
         JPanel contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout(5, 5));
@@ -69,7 +71,7 @@ public class ShowTickets {
         frame.pack();
         frame.setLocationByPlatform(true);
         frame.add(panel);
-        frame.setMinimumSize(new Dimension(1250, 500));
+        frame.setMinimumSize(new Dimension(1000, 500));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }

@@ -138,13 +138,12 @@ public class DBAcess {
                 "inner join SEANS " +
                 "on FILM.id_filmu=SEANS.id_filmu " +
                 "inner join ZAMOWIENIA " +
-                "on SEANS.id_seansu=ZAMOWIENIA.id_zamowienia " +
+                "on SEANS.id_seansu=ZAMOWIENIA.id_seansu " +
                 "inner join BILET " +
                 "on ZAMOWIENIA.id_zamowienia=BILET.id_zamowienia " +
                 "where ZAMOWIENIA.email_klienta = '" + userMail + "'");
 
         meta = result.getMetaData();
-        System.out.println(userMail);
 
         LocalDate currentTime = LocalDate.now();
         java.util.Date nowDate = java.util.Date.from(currentTime.atStartOfDay(ZoneId.systemDefault()).toInstant());
@@ -156,11 +155,8 @@ public class DBAcess {
                 data[j][i] = result.getString(i+1);
                 i++;
             }
-            //LocalDate date = LocalDate.parse(String.valueOf(data[j][i]));
-            //data[j][i] = (Date.valueOf(date).after(nowDate)) ? "aktywny" : "nieaktywny";
-            System.out.println("data[j][i]" + (data[j][i]));
-            System.out.println("nowDate: " + nowDate);
-            System.out.println("Date.valueOf(result.getDate(\"dzien\").toLocalDate()): " + Date.valueOf(result.getDate("dzien").toLocalDate()));
+            LocalDate date = LocalDate.parse(String.valueOf(data[j][4]));
+            data[j][i] = (Date.valueOf(date).after(nowDate)) ? "aktywny" : "nieaktywny";
             j++;
         }
         con.close();
@@ -181,7 +177,8 @@ public class DBAcess {
                 "where SEANS.id_seansu = " + seats);
         meta = result.getMetaData();
         ArrayList<String> seatTable = new ArrayList<>();
-        for (int w = 0; w < Integer.parseInt(result.getString("liczba_miejsc")); w++)
+
+        for (int w = 0; w < Integer.parseInt(result.getString(1)); w++)
             seatTable.add(w, String.valueOf(w+1));
 
         while (result.next()) {
@@ -233,7 +230,6 @@ public class DBAcess {
                 "values (" + orderId + ", '" + userMail + "', " + seanceID + ")");
         stmt.executeUpdate("insert into BILET " +
                 "values (" + ticketId + ", '" + orderId + "', " + selectedSeat + ")");
-
         con.close();
     }
 }

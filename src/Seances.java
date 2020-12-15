@@ -141,6 +141,7 @@ public class Seances {
                 JLabel hallLabel = new JLabel("Numer sali: " + table[0].getValueAt(row, 6).toString());
                 JLabel seatsLabel = new JLabel("Wybierz miejsce: ");
                 String [] seatsTable = con.getSeats(Integer.parseInt(data[row][8]));
+
                 JComboBox<String> selectSeats = new JComboBox<>(seatsTable);
                 JPanel queryWindow = new JPanel(new GridLayout(0, 1));
                 queryWindow.add(titleLabel);
@@ -158,7 +159,7 @@ public class Seances {
                     System.out.println("Cancelled");
                 }
             } catch (ClassNotFoundException | SQLException classNotFoundException) {
-                //classNotFoundException.printStackTrace();
+                classNotFoundException.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Błąd połączenia");
             }
 
