@@ -137,7 +137,7 @@ public class Seances {
             try {
                 JLabel titleLabel = new JLabel(title);
                 JLabel dayLabel = new JLabel("Dzień: " + table[0].getValueAt(row, 4).toString());
-                JLabel startLabel = new JLabel("Godznia rozpoczęcia: " + table[0].getValueAt(row, 5).toString());
+                JLabel startLabel = new JLabel("Godzina rozpoczęcia: " + table[0].getValueAt(row, 5).toString());
                 JLabel hallLabel = new JLabel("Numer sali: " + table[0].getValueAt(row, 6).toString());
                 JLabel seatsLabel = new JLabel("Wybierz miejsce: ");
                 String [] seatsTable = con.getSeats(Integer.parseInt(data[row][8]));
@@ -159,7 +159,7 @@ public class Seances {
                     System.out.println("Cancelled");
                 }
             } catch (ClassNotFoundException | SQLException classNotFoundException) {
-                classNotFoundException.printStackTrace();
+                //classNotFoundException.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Błąd połączenia");
             }
 
