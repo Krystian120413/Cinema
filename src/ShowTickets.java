@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
+
 public class ShowTickets {
     private ImageIcon imageForLabel;
     public void ticketsList(String userMail) throws SQLException, ClassNotFoundException {
@@ -14,9 +15,13 @@ public class ShowTickets {
         String[] columnNames = {"Film", "Reżyser", "Gatunek", "Czas trwania", "dzień", "godzina rozpoczęcia", "numer sali", "miejsce", "aktywny"};
         final JTable[] table = {new JTable(data, columnNames)};
 
-        table[0].setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        for (int i = 0; i < table[0].getColumnCount(); i++)
+
+
+        table[0].getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 14));
+
+        for (int i = 0; i < table[0].getColumnCount(); i++) {
             table[0].getColumnModel().getColumn(i).setPreferredWidth(130);
+        }
 
         table[0].setPreferredScrollableViewportSize(new Dimension(table[0].getPreferredSize().width, 300));
 

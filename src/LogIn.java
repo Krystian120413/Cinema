@@ -77,6 +77,7 @@ public class LogIn {
                 check = con.login(checkUser, checkPassword);
             } catch (SQLException | ClassNotFoundException throwables) {
                 JOptionPane.showMessageDialog(null, "Błąd połączenia");
+                throwables.printStackTrace();
             }
             if(check){
                 System.out.println("Zalogowano");
