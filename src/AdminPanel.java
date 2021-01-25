@@ -11,7 +11,7 @@ public class AdminPanel {
 
     public void display() throws SQLException, ClassNotFoundException {
 
-        DBAcess con = new DBAcess();
+        DBAcess con = DBAcess.getInstance();
 
         JFrame frame = new JFrame("Panel Klienta");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

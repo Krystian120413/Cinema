@@ -10,7 +10,7 @@ public class LogIn {
 
     public void displayGUI(){
 
-        DBAcess con = new DBAcess();
+        DBAcess con = DBAcess.getInstance();
 
         JFrame frame = new JFrame("Logowanie");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -75,7 +75,7 @@ public class LogIn {
                 boolean check = false;
             try {
                 check = con.login(checkUser, checkPassword);
-            } catch (SQLException | ClassNotFoundException throwables) {
+            } catch (SQLException throwables) {
                 JOptionPane.showMessageDialog(null, "Błąd połączenia");
                 throwables.printStackTrace();
             }

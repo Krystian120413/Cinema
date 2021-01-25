@@ -7,13 +7,31 @@ public class DBAcess {
     Statement stmt, stmt1, stmt2, stmt3, stmt4;
     ResultSet result, result1, result2;
     ResultSetMetaData meta;
+    final String url = "jdbc:sqlite:baza_kino.db3";
+    static Connection con;
 
-    public boolean login(Object email, Object password) throws SQLException, ClassNotFoundException {
-        String url = "jdbc:sqlite:baza_kino.db3";
+    static DBAcess dbc;
+
+    static {
+        try{
+            dbc = new DBAcess();
+        } catch (ClassNotFoundException | SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    private DBAcess() throws ClassNotFoundException, SQLException {
         Class.forName("org.sqlite.JDBC");
-        Connection con = DriverManager.getConnection(url);
-        this.stmt = con.createStatement();
+        this.con = DriverManager.getConnection(url);
+    }
 
+    public static DBAcess getInstance(){
+        return dbc;
+    }
+
+    public boolean login(Object email, Object password) throws SQLException {
+
+        this.stmt = con.createStatement();
         String query = "select haslo from KLIENT where email = '" + email + "'";
         result = stmt.executeQuery(query);
         String pass = null;
@@ -24,15 +42,11 @@ public class DBAcess {
                 pass = result.getString(i + 1);
             }
         }
-        con.close();
         return password.equals(pass);
     }
 
 
-    public String client(String email) throws ClassNotFoundException, SQLException {
-        String url = "jdbc:sqlite:baza_kino.db3";
-        Class.forName("org.sqlite.JDBC");
-        Connection con = DriverManager.getConnection(url);
+    public String client(String email) throws SQLException {
         this.stmt = con.createStatement();
 
         String query = "select imie, nazwisko from KLIENT where email = '" + email + "'";
@@ -45,14 +59,10 @@ public class DBAcess {
                 user.append(result.getString(i + 1)).append(" ");
             }
         }
-        con.close();
         return user.toString();
     }
 
     public String[] getClientData(String email) throws ClassNotFoundException, SQLException {
-        String url = "jdbc:sqlite:baza_kino.db3";
-        Class.forName("org.sqlite.JDBC");
-        Connection con = DriverManager.getConnection(url);
         this.stmt = con.createStatement();
 
         String query = "select imie, nazwisko, email, haslo from KLIENT where email = '" + email + "'";
@@ -65,47 +75,31 @@ public class DBAcess {
                 user[i] = result.getString(i + 1);
             }
         }
-        con.close();
         return user;
     }
 
     public void updateUserData(String name, String surname, String email) throws ClassNotFoundException, SQLException {
-        String url = "jdbc:sqlite:baza_kino.db3";
-        Class.forName("org.sqlite.JDBC");
-        Connection con = DriverManager.getConnection(url);
         this.stmt = con.createStatement();
 
         String query = "update KLIENT  set imie = '" + name + "', nazwisko = '" + surname + "' where email = '"  + email + "'";
         stmt.executeUpdate(query);
-        con.close();
     }
 
     public void addUser(String name, String surname, String email, String password) throws ClassNotFoundException, SQLException {
-        String url = "jdbc:sqlite:baza_kino.db3";
-        Class.forName("org.sqlite.JDBC");
-        Connection con = DriverManager.getConnection(url);
         this.stmt = con.createStatement();
 
         String query = "insert into KLIENT  values ('" + email + "', '" + password + "', '" + name + "', '" + surname + "')";
         stmt.executeUpdate(query);
-        con.close();
     }
 
     public void deleteUser(String email, String password) throws ClassNotFoundException, SQLException {
-        String url = "jdbc:sqlite:baza_kino.db3";
-        Class.forName("org.sqlite.JDBC");
-        Connection con = DriverManager.getConnection(url);
         this.stmt = con.createStatement();
 
         String query = "delete from KLIENT where email = '" + email + "' and haslo = '" + password + "' ";
         stmt.executeUpdate(query);
-        con.close();
     }
 
-    public String[][] getSeances() throws ClassNotFoundException, SQLException {
-        String url = "jdbc:sqlite:baza_kino.db3";
-        Class.forName("org.sqlite.JDBC");
-        Connection con = DriverManager.getConnection(url);
+    public String[][] getSeances() throws SQLException {
         this.stmt = con.createStatement();
 
         result = stmt.executeQuery("select FIlM.tytul, FILM.rezyser, FILM.gatunek, FILM.czas_trwania, SEANS.dzien, SEANS.godzina_rozpoczecia, SEANS.id_sali, SALA.liczba_miejsc, SEANS.id_seansu " +
@@ -130,13 +124,9 @@ public class DBAcess {
                 j++;
             }
         }
-        con.close();
         return data;
     }
     public boolean addSeance(String title, String director, String genre, String length, String day, String start, String hall) throws ClassNotFoundException, SQLException {
-        String url = "jdbc:sqlite:baza_kino.db3";
-        Class.forName("org.sqlite.JDBC");
-        Connection con = DriverManager.getConnection(url);
         this.stmt = con.createStatement();
         this.stmt1 = con.createStatement();
         this.stmt2 = con.createStatement();
@@ -169,14 +159,10 @@ public class DBAcess {
             stmt4.executeUpdate("INSERT INTO SEANS " +
                     "VALUES (" + seanceId + ", " + hall + ", " + filmID + ", '" + day + "', '" + start + "')");
         }
-        con.close();
         return true;
     }
 
     public boolean changeSeance(String title, String day, String start, String hall, String oldStart, String oldDay, String oldHall) throws ClassNotFoundException, SQLException {
-        String url = "jdbc:sqlite:baza_kino.db3";
-        Class.forName("org.sqlite.JDBC");
-        Connection con = DriverManager.getConnection(url);
         this.stmt = con.createStatement();
 
         result = stmt.executeQuery("select SEANS.id_filmu, SEANS.id_seansu " +
@@ -196,17 +182,13 @@ public class DBAcess {
                     "SET id_sali = " + hall + ", id_filmu = " + filmId + ", dzien = '" + day + "', godzina_rozpoczecia = '" + start + "' " +
                     "WHERE id_seansu = " + seanceId);
 
-            con.close();
             return true;
         }
         else
             return false;
     }
 
-    public String[][] getClientTickets(String userMail) throws ClassNotFoundException, SQLException {
-        String url = "jdbc:sqlite:baza_kino.db3";
-        Class.forName("org.sqlite.JDBC");
-        Connection con = DriverManager.getConnection(url);
+    public String[][] getClientTickets(String userMail) throws SQLException {
         this.stmt = con.createStatement();
 
         result = stmt.executeQuery("select FIlM.tytul, FILM.rezyser, FILM.gatunek, FILM.czas_trwania, SEANS.dzien, SEANS.godzina_rozpoczecia, SEANS.id_sali, BILET.miejsce, BILET.id_biletu " +
@@ -235,14 +217,10 @@ public class DBAcess {
             data[j][i] = (Date.valueOf(date).after(nowDate)) ? "aktywny" : "nieaktywny";
             j++;
         }
-        con.close();
         return data;
     }
 
     public String[] getSeats(int seats) throws ClassNotFoundException, SQLException {
-        String url = "jdbc:sqlite:baza_kino.db3";
-        Class.forName("org.sqlite.JDBC");
-        Connection con = DriverManager.getConnection(url);
         this.stmt = con.createStatement();
 
         result = stmt.executeQuery("select BILET.miejsce, SALA.liczba_miejsc, SEANS.id_seansu " +
@@ -268,7 +246,6 @@ public class DBAcess {
         String[] seatsRes = new String[seatTable.size()];
         for (int f = 0; f < seatsRes.length; f++)
             seatsRes[f] = seatTable.get(f);
-        con.close();
         return seatsRes;
     }
 
@@ -276,9 +253,6 @@ public class DBAcess {
     private int ticketId;
 
     public void newOrder(String userMail, int seanceID, int selectedSeat) throws ClassNotFoundException, SQLException {
-        String url = "jdbc:sqlite:baza_kino.db3";
-        Class.forName("org.sqlite.JDBC");
-        Connection con = DriverManager.getConnection(url);
         this.stmt = con.createStatement();
         this.orderId++;
         this.ticketId++;
@@ -306,6 +280,5 @@ public class DBAcess {
                 "values (" + orderId + ", '" + userMail + "', " + seanceID + ")");
         stmt.executeUpdate("insert into BILET " +
                 "values (" + ticketId + ", '" + orderId + "', " + selectedSeat + ")");
-        con.close();
     }
 }

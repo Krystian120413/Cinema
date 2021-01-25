@@ -10,7 +10,7 @@ public class ShowTickets {
     private ImageIcon imageForLabel;
     public void ticketsList(String userMail) throws SQLException, ClassNotFoundException {
 
-        DBAcess con = new DBAcess();
+        DBAcess con = DBAcess.getInstance();
         String[][] data = con.getClientTickets(userMail);
         String[] columnNames = {"Film", "Reżyser", "Gatunek", "Czas trwania", "dzień", "godzina rozpoczęcia", "numer sali", "miejsce", "aktywny"};
         final JTable[] table = {new JTable(data, columnNames)};

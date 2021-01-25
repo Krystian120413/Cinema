@@ -4,13 +4,14 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Seances {
     private ImageIcon imageForLabel;
 
     public void seancesListMain() throws SQLException, ClassNotFoundException, IOException {
-        DBAcess con = new DBAcess();
+        DBAcess con = DBAcess.getInstance();
         String[][] data = con.getSeances();
         String[] columnNames = {"Tytuł", "Reżyser", "Gatunek", "Czas trwania", "dzień", "godzina rozpoczęcia", "numer sali", "liczba miejsc"};
         final JTable[] table = {new JTable(data, columnNames)};
@@ -76,7 +77,7 @@ public class Seances {
     }
 
     public void seancesListClient(String userMail) throws SQLException, ClassNotFoundException {
-        DBAcess con = new DBAcess();
+        DBAcess con = DBAcess.getInstance();
         String[][] data = con.getSeances();
         String[] columnNames = {"Tytuł", "Reżyser", "Gatunek", "Czas trwania", "dzień", "godzina rozpoczęcia", "numer sali", "liczba miejsc"};
         final JTable[] table = {new JTable(data, columnNames)};
@@ -190,7 +191,7 @@ public class Seances {
     }
 
     public void seancesListAdmin() throws SQLException, ClassNotFoundException {
-        DBAcess con = new DBAcess();
+        DBAcess con = DBAcess.getInstance();
         String[][] data = con.getSeances();
         String[] columnNames = {"Tytuł", "Reżyser", "Gatunek", "Czas trwania", "dzień", "godzina rozpoczęcia", "numer sali", "liczba miejsc"};
         final JTable[] table = {new JTable(data, columnNames)};
